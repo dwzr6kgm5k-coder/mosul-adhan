@@ -76,13 +76,13 @@ a.get:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
     <h2 id="h-times">مواقيت اليوم بالموصل</h2>
     <p class="next" id="next"></p>
     <div class="times" id="times"></div>
-    <p class="note">نفس حساب التطبيق: الفجر 18°، العشاء 17°، العصر شافعي، توقيت العراق.</p>
+    <p class="note">نفس أوقات صفحة "مواقيت الصلاة لمدينة الموصل" ونفس حساب التطبيق.</p>
   </section>
 
   <section aria-labelledby="h-dl" class="dl">
     <h2 id="h-dl">نزّل التطبيق</h2>
     <a class="get" href="MosulAdhan.apk" download>تحميل أذان الموصل (APK)</a>
-    <p class="meta">للأندرويد 8 وأحدث · الإصدار 1.0 · حجمه 49 كيلوبايت · <a href="https://github.com/dwzr6kgm5k-coder/mosul-adhan" style="color:inherit">الكود على GitHub</a></p>
+    <p class="meta">للأندرويد 8 وأحدث · الإصدار 1.1 · حجمه 205 كيلوبايت · <a href="https://github.com/dwzr6kgm5k-coder/mosul-adhan" style="color:inherit">الكود على GitHub</a></p>
   </section>
 
   <section aria-labelledby="h-steps">
@@ -104,6 +104,7 @@ a.get:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
 
 <script>
 (function(){
+  var OFF=[0,0,5,3,2,0];
   var LAT=36.34, LNG=43.13, ELEV=223, TZ=3, FAJR=18, ISHA=17, ASR=1;
   var NAMES=["الفجر","الشروق","الظهر","العصر","المغرب","العشاء"];
   function r(d){return d*Math.PI/180} function g(x){return x*180/Math.PI}
@@ -122,7 +123,7 @@ a.get:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
   function asr(jd,f,t){var dec=sunPos(jd+t/24)[0];return ang(jd,-g(Math.atan(1/(f+dtan(Math.abs(LAT-dec))))),t,false)}
   function compute(y,m,d){var jd=jdate(y,m,d)-LNG/360,h=0.833+0.0347*Math.sqrt(ELEV),t=[5,6,12,13,18,18];
     for(var i=0;i<3;i++){t=[ang(jd,FAJR,t[0],true),ang(jd,h,t[1],true),mid(jd,t[2]),asr(jd,ASR,t[3]),ang(jd,h,t[4],false),ang(jd,ISHA,t[5],false)]}
-    return t.map(function(x){return Math.round((x+TZ-LNG/15)*60)})}
+    return t.map(function(x,i){return Math.round((x+TZ-LNG/15)*60)+OFF[i]})}
   function fmt(min){var h=Math.floor(min/60),m=min%60,ap=h<12?"ص":"م",h12=h%12||12;return h12+":"+(m<10?"0":"")+m+" "+ap}
 
   function iraqNow(){var n=new Date(Date.now()+TZ*3600000);return {y:n.getUTCFullYear(),m:n.getUTCMonth()+1,d:n.getUTCDate(),min:n.getUTCHours()*60+n.getUTCMinutes()}}

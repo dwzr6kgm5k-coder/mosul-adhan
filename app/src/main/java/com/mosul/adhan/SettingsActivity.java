@@ -61,7 +61,7 @@ public class SettingsActivity extends Activity {
         content.addView(card, Ui.matchWrap(this, 8));
 
         // ===== الأصوات =====
-        section("صوت الأذان", "اختار أي ملف صوت من التلفون (mp3 أو غيره). إذا ما تختار، تدك نغمة الإشعار الافتراضية.");
+        section("صوت الأذان", "اختار أي ملف صوت من التلفون (mp3 أو غيره). إذا ما تختار، يشتغل الأذان المدمج بالتطبيق.");
         LinearLayout sounds = Ui.card(this);
         sounds.addView(soundBlock(false));
         View div = new View(this);
@@ -158,7 +158,7 @@ public class SettingsActivity extends Activity {
         String name = prefs.getSoundName(fajr);
         String current;
         if (prefs.getSound(fajr) == null) {
-            current = fajr ? "نفس صوت باقي الصلوات" : "نغمة الإشعار الافتراضية";
+            current = fajr ? "نفس صوت باقي الصلوات" : "الأذان المدمج بالتطبيق";
         } else {
             current = name != null ? name : "ملف مختار";
         }

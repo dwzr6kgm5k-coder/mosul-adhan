@@ -66,6 +66,7 @@ public class AdhanService extends Service {
         releasePlayer();
         triedFallback = false;
         Uri uri = new Prefs(this).soundFor(prayer);
+        if (uri == null) uri = bundledAdhan(prayer);
         if (uri == null) {
             triedFallback = true;
             uri = defaultSound();
@@ -113,9 +114,19 @@ public class AdhanService extends Service {
         startPlayer(defaultSound());
     }
 
+    /** الأذان المدمج بالتطبيق: res/raw/adhan_fajr للفجر (إذا موجود) و res/raw/adhan لباقي الصلوات. */
+    private Uri bundledAdhan(int prayer) {
+        int id = 0;
+        if (prayer == PrayerTimes.FAJR) id = getResources().getIdentifier("adhan_fajr", "raw", getPackageName());
+        if (id == 0) id = getResources().getIdentifier("adhan", "raw", getPackageName());
+        return id == 0 ? null : Uri.parse("android.resource://" + getPackageName() + "/" + id);
+    }
+
     private Uri defaultSound() {
-        Uri u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        if (u == null) u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        // نغمة المنبه أعلى وأطول من نغمة الإشعار، فتنسمع أكيد إذا ما مختار صوت أذان
+        Uri u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        if (u == null) u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        if (u == null) u = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         return u;
     }
 

@@ -22,6 +22,10 @@ public final class PrayerTimes {
     public static final double ISHA_ANGLE = 17;
     public static final double ASR_SHADOW = 1;        // 1 = شافعي، 2 = حنفي
 
+    // دقائق تضيفها صفحة "مواقيت الصلاة لمدينة الموصل" فوك الحساب الفلكي، حتى تطلع أوقاتنا نفس أوقات الصفحة بالضبط.
+    // الترتيب: الفجر، الشروق، الظهر، العصر، المغرب، العشاء. (طوبقت مع جدول الصفحة ليوم 27 تشرين الثاني 2026)
+    public static final int[] PAGE_OFFSETS = {0, 0, 5, 3, 2, 0};
+
     // ===== ترتيب الأوقات =====
     public static final int FAJR = 0, SUNRISE = 1, DHUHR = 2, ASR = 3, MAGHRIB = 4, ISHA = 5;
     public static final int COUNT = 6;
@@ -36,7 +40,7 @@ public final class PrayerTimes {
     private PrayerTimes() {}
 
     /**
-     * يرجّع الأوقات الستة بالدقائق من منتصف الليل (بتوقيت العراق)، مقرّبة لأقرب دقيقة، بدون فروقات المستخدم.
+     * يرجّع الأوقات الستة بالدقائق من منتصف الليل (بتوقيت العراق)، مقرّبة لأقرب دقيقة، مع فروقات الصفحة (PAGE_OFFSETS) وبدون فروقات المستخدم.
      */
     public static int[] computeMinutes(int year, int month, int day) {
         double jd = julianDate(year, month, day) - LONGITUDE / (15.0 * 24.0);
@@ -57,7 +61,7 @@ public final class PrayerTimes {
         int[] out = new int[COUNT];
         for (int i = 0; i < COUNT; i++) {
             double local = t[i] + TIMEZONE_HOURS - LONGITUDE / 15.0;
-            out[i] = (int) Math.round(local * 60.0);
+            out[i] = (int) Math.round(local * 60.0) + PAGE_OFFSETS[i];
         }
         return out;
     }
