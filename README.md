@@ -29,3 +29,9 @@
 ## التحميل
 - الموقع: https://dwzr6kgm5k-coder.github.io/mosul-adhan/
 - ملف التطبيق: https://dwzr6kgm5k-coder.github.io/mosul-adhan/MosulAdhan.apk (موجود بـ `docs/MosulAdhan.apk`، بدّله بأي نسخة جديدة)
+
+## إطلاق نسخة جديدة (التحديث التلقائي)
+1. زيد `versionCode` و `versionName` بـ `AndroidManifest.xml` و `app/build.gradle`.
+2. ابنِ الـ APK بنفس مفتاح التوقيع وحطه بـ `docs/MosulAdhan.apk`.
+3. حدّث `docs/version.json` بنفس الرقم وارفع.
+التطبيقات المنصّبة (من 1.2 وطالع) تشيك على `version.json` كل يوم وتنزّل التحديث وحدها.

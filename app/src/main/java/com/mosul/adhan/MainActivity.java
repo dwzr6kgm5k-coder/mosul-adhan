@@ -51,7 +51,11 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         AlarmScheduler.scheduleNext(this);
+        Updater.scheduleDaily(this);
         handler.post(ticker);
+        Updater.checkAsync(this, true, new Runnable() {
+            @Override public void run() { if (!isFinishing()) refreshWarnings(); }
+        });
     }
 
     @Override
@@ -128,7 +132,7 @@ public class MainActivity extends Activity {
         body.addView(settings, Ui.matchWrap(this, 10));
 
         TextView note = Ui.text(this,
-                "الأوقات محسوبة فلكياً للموصل وتتغير يومياً. إذا اكو فرق ويه التقويم اللي تعتمده، عدّل الدقائق من الإعدادات.",
+                "الأوقات نفس صفحة مواقيت الصلاة لمدينة الموصل. التطبيق يتحدث وحده من الموقع إذا نزلت نسخة جديدة.",
                 13, Ui.MUTED, false);
         note.setGravity(Gravity.CENTER);
         body.addView(note, Ui.matchWrap(this, 16));
@@ -193,6 +197,13 @@ public class MainActivity extends Activity {
     private void refreshWarnings() {
         warnings.removeAllViews();
 
+        String update = Updater.pendingVersionName(this);
+        if (update != null) {
+            addWarning("اكو نسخة جديدة من التطبيق " + update + " جاهزة.", "تحديث", new Runnable() {
+                @Override public void run() { Updater.install(MainActivity.this, true); }
+            });
+        }
+
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (!nm.areNotificationsEnabled()) {
             addWarning("الإشعارات مطفية، فعّلها حتى يطلع زر إيقاف الأذان.", "تفعيل", new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
@@ -215,14 +226,8 @@ public class MainActivity extends Activity {
     }
 
     private void addWarning(String msg, String action, final Intent intent) {
-        LinearLayout box = Ui.row(this);
-        box.setBackground(Ui.rounded(Ui.WARN_BG, Ui.dp(this, 12)));
-        int p = Ui.dp(this, 12);
-        box.setPadding(p, p, p, p);
-        TextView t = Ui.text(this, msg, 14, Ui.TEXT, false);
-        Button b = Ui.button(this, action, Ui.GOLD, Color.WHITE);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+        addWarning(msg, action, new Runnable() {
+            @Override public void run() {
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
@@ -230,6 +235,18 @@ public class MainActivity extends Activity {
                             Uri.parse("package:" + getPackageName())));
                 }
             }
+        });
+    }
+
+    private void addWarning(String msg, String action, final Runnable onClick) {
+        LinearLayout box = Ui.row(this);
+        box.setBackground(Ui.rounded(Ui.WARN_BG, Ui.dp(this, 12)));
+        int p = Ui.dp(this, 12);
+        box.setPadding(p, p, p, p);
+        TextView t = Ui.text(this, msg, 14, Ui.TEXT, false);
+        Button b = Ui.button(this, action, Ui.GOLD, Color.WHITE);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) { onClick.run(); }
         });
         box.addView(t, Ui.weight(1));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
