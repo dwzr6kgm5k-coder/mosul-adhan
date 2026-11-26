@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.mosul.adhan'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.mosul.adhan"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    signingConfigs {
+        // المفتاح (keystore/adhan.jks) مو موجود بالمستودع العام، وكلمة السر من متغير ADHAN_KS_PASS. نفس المفتاح المستخدم لبناء النسخة الأولى، حتى التحديث ينصب فوك القديم بدون حذف
+        release {
+            storeFile file('../keystore/adhan.jks')
+            storePassword System.getenv('ADHAN_KS_PASS') ?: ''
+            keyAlias 'adhan'
+            keyPassword System.getenv('ADHAN_KS_PASS') ?: ''
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.release
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}

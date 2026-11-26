@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>أذان الموصل - تطبيق مواقيت الصلاة في الموصل للأندرويد</title>
+<meta name="description" content="تطبيق أندرويد مجاني يحسب مواقيت الصلاة لمدينة الموصل ويشغّل الأذان بوقت كل صلاة حتى والشاشة مطفية. مواقيت اليوم وتحميل التطبيق وطريقة التنصيب.">
+<meta property="og:title" content="أذان الموصل">
+<meta property="og:description" content="تطبيق أندرويد يأذّن بوقت كل صلاة بالموصل. مواقيت اليوم وتحميل مباشر.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@500;700&family=Tajawal:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column; a dawn-sky header band, then today's times, the download, and install steps */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --fg:#14202e; --muted:#5b6878; --line:#dde3ea;
+  --accent:#b8761c; --accent-fg:#ffffff; --sky1:#0f2440; --sky2:#3a4f72; --sky3:#d99a4e; --sky-fg:#f6efe4;
+  --now:#fff4e2;
+  --display:"Noto Kufi Arabic","Tajawal",system-ui,sans-serif;
+  --body:"Tajawal","Noto Kufi Arabic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c131d; --surface:#141e2b; --fg:#e8edf3; --muted:#9aa7b7; --line:#243245;
+  --accent:#e0a24a; --accent-fg:#1a1206; --sky1:#060d18; --sky2:#1b2b45; --sky3:#8a5a26; --sky-fg:#f6efe4;
+  --now:#2a2214; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c131d; --surface:#141e2b; --fg:#e8edf3; --muted:#9aa7b7; --line:#243245;
+  --accent:#e0a24a; --accent-fg:#1a1206; --sky1:#060d18; --sky2:#1b2b45; --sky3:#8a5a26; --sky-fg:#f6efe4;
+  --now:#2a2214; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.7}
+.wrap{max-width:560px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero{background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 62%,var(--sky3) 100%);color:var(--sky-fg);
+  margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 2.4rem);padding-bottom:2.2rem}
+.hero h1{font-family:var(--display);font-size:2.1rem;line-height:1.3;margin:0;text-wrap:balance}
+.hero p{margin:.4rem 0 0;opacity:.88}
+.date{font-size:.95rem;opacity:.8;margin-top:1rem!important}
+main{display:flex;flex-direction:column;gap:1.6rem;padding-block:1.6rem 3rem}
+h2{font-family:var(--display);font-size:1.2rem;margin:0 0 .6rem}
+.next{font-size:1rem;color:var(--muted);margin:0 0 .6rem}
+.next b{color:var(--fg)}
+.times{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.row{display:flex;justify-content:space-between;align-items:center;padding:.7rem 1rem;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .t{font-variant-numeric:tabular-nums;font-weight:700;font-size:1.15rem}
+.row.sun{color:var(--muted)}
+.row.sun .t{font-weight:500}
+.row.is-next{background:var(--now)}
+.row.is-next .n::after{content:"  ← القادمة";font-size:.8rem;color:var(--accent);font-weight:700}
+.note{font-size:.88rem;color:var(--muted);margin:.5rem 0 0}
+.dl{display:flex;flex-direction:column;gap:.6rem}
+button.get{font:inherit;font-family:var(--display);font-size:1.15rem;font-weight:700;background:var(--accent);color:var(--accent-fg);
+  border:0;border-radius:12px;padding:.9rem 1rem;cursor:pointer;width:100%}
+button.get:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+button.get:disabled{opacity:.6;cursor:default}
+.status{font-size:.95rem;color:var(--muted);min-height:1.5em;margin:0}
+.meta{font-size:.85rem;color:var(--muted);margin:0}
+ol{margin:0;padding-inline-start:1.3rem;display:flex;flex-direction:column;gap:.45rem}
+ol li::marker{color:var(--accent);font-weight:700}
+.warn{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;font-size:.95rem}
+footer{font-size:.82rem;color:var(--muted);border-top:1px solid var(--line);padding-top:1rem}
+*{box-sizing:border-box}body{margin:0}
+a.get{display:block;text-align:center;text-decoration:none;font-family:var(--display);font-size:1.15rem;font-weight:700;background:var(--accent);color:var(--accent-fg);border-radius:12px;padding:.9rem 1rem}
+a.get:focus-visible{outline:3px solid var(--fg);outline-offset:2px}
+</style>
+</head>
+<body>
+<div>
+<header class="hero"><div class="wrap">
+  <h1>أذان الموصل</h1>
+  <p>تطبيق أندرويد يأذّن بوقت كل صلاة حتى والشاشة مطفية.</p>
+  <p class="date" id="today"></p>
+</div></header>
+
+<main class="wrap">
+  <section aria-labelledby="h-times">
+    <h2 id="h-times">مواقيت اليوم بالموصل</h2>
+    <p class="next" id="next"></p>
+    <div class="times" id="times"></div>
+    <p class="note">نفس حساب التطبيق: الفجر 18°، العشاء 17°، العصر شافعي، توقيت العراق.</p>
+  </section>
+
+  <section aria-labelledby="h-dl" class="dl">
+    <h2 id="h-dl">نزّل التطبيق</h2>
+    <a class="get" href="https://github.com/dwzr6kgm5k-coder/mosul-adhan/releases/latest/download/MosulAdhan.apk">تحميل أذان الموصل (APK)</a>
+    <p class="meta">للأندرويد 8 وأحدث · الإصدار 1.0 · حجمه 49 كيلوبايت · <a href="https://github.com/dwzr6kgm5k-coder/mosul-adhan" style="color:inherit">الكود على GitHub</a></p>
+  </section>
+
+  <section aria-labelledby="h-steps">
+    <h2 id="h-steps">طريقة التنصيب</h2>
+    <ol>
+      <li>اضغط زر التحميل فوك. إذا سألك المتصفح، اختار <b>تنزيل على أي حال</b>.</li>
+      <li>من الإشعار أو من تطبيق <b>الملفات</b> > <b>التنزيلات</b>، اضغط على <b>MosulAdhan.apk</b>.</li>
+      <li>إذا طلعلك "السماح من هذا المصدر"، فعّله وارجع اضغط <b>تثبيت</b>.</li>
+      <li>إذا طلع تحذير Play Protect، اختار <b>تثبيت على أي حال</b>. التطبيق مو من المتجر فهذا طبيعي.</li>
+      <li>افتح التطبيق ووافق على الإشعارات والمنبهات حتى يأذّن بوقته.</li>
+    </ol>
+  </section>
+
+  <div class="warn">ما ينزل؟ افتح الرابط من متصفح Chrome بالتلفون بدل ما تفتحه من داخل واتساب أو فيسبوك، أو نزّله على الكمبيوتر ودزّه للتلفون.</div>
+
+  <footer>التطبيق مجاني وما يحتاج إنترنت بعد التنصيب. المواقيت محسوبة فلكياً، وتگدر تعدّل أي صلاة بالدقائق من إعدادات التطبيق.</footer>
+</main>
+</div>
+
+<script>
+(function(){
+  var LAT=36.34, LNG=43.13, ELEV=223, TZ=3, FAJR=18, ISHA=17, ASR=1;
+  var NAMES=["الفجر","الشروق","الظهر","العصر","المغرب","العشاء"];
+  function r(d){return d*Math.PI/180} function g(x){return x*180/Math.PI}
+  function dsin(d){return Math.sin(r(d))} function dcos(d){return Math.cos(r(d))} function dtan(d){return Math.tan(r(d))}
+  function fixA(a){return a-360*Math.floor(a/360)} function fixH(a){return a-24*Math.floor(a/24)}
+  function jdate(y,m,d){if(m<=2){y-=1;m+=12}var A=Math.floor(y/100),B=2-A+Math.floor(A/4);
+    return Math.floor(365.25*(y+4716))+Math.floor(30.6001*(m+1))+d+B-1524.5}
+  function sunPos(jd){var D=jd-2451545,G=fixA(357.529+0.98560028*D),Q=fixA(280.459+0.98564736*D),
+    L=fixA(Q+1.915*dsin(G)+0.020*dsin(2*G)),E=23.439-0.00000036*D,
+    RA=fixH(g(Math.atan2(dcos(E)*dsin(L),dcos(L)))/15),eqt=Q/15-RA;eqt=eqt-24*Math.floor((eqt+12)/24);
+    return [g(Math.asin(dsin(E)*dsin(L))),eqt]}
+  function mid(jd,t){return fixH(12-sunPos(jd+t/24)[1])}
+  function ang(jd,a,t,before){var dec=sunPos(jd+t/24)[0],noon=mid(jd,t),
+    c=(-dsin(a)-dsin(dec)*dsin(LAT))/(dcos(dec)*dcos(LAT));c=Math.max(-1,Math.min(1,c));
+    var v=g(Math.acos(c))/15;return noon+(before?-v:v)}
+  function asr(jd,f,t){var dec=sunPos(jd+t/24)[0];return ang(jd,-g(Math.atan(1/(f+dtan(Math.abs(LAT-dec))))),t,false)}
+  function compute(y,m,d){var jd=jdate(y,m,d)-LNG/360,h=0.833+0.0347*Math.sqrt(ELEV),t=[5,6,12,13,18,18];
+    for(var i=0;i<3;i++){t=[ang(jd,FAJR,t[0],true),ang(jd,h,t[1],true),mid(jd,t[2]),asr(jd,ASR,t[3]),ang(jd,h,t[4],false),ang(jd,ISHA,t[5],false)]}
+    return t.map(function(x){return Math.round((x+TZ-LNG/15)*60)})}
+  function fmt(min){var h=Math.floor(min/60),m=min%60,ap=h<12?"ص":"م",h12=h%12||12;return h12+":"+(m<10?"0":"")+m+" "+ap}
+
+  function iraqNow(){var n=new Date(Date.now()+TZ*3600000);return {y:n.getUTCFullYear(),m:n.getUTCMonth()+1,d:n.getUTCDate(),min:n.getUTCHours()*60+n.getUTCMinutes()}}
+  function render(){
+    var now=iraqNow(),mins=compute(now.y,now.m,now.d);
+    try{var td=document.getElementById("today");td.textContent="";var a=document.createElement("span"),b2=document.createElement("span");a.style.display=b2.style.display="block";
+      a.textContent=new Intl.DateTimeFormat("ar-IQ",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Baghdad"}).format(new Date());
+      b2.textContent=new Intl.DateTimeFormat("ar-SA-u-ca-islamic-umalqura",{day:"numeric",month:"long",year:"numeric",timeZone:"Asia/Baghdad"}).format(new Date());td.appendChild(a);td.appendChild(b2)}catch(e){}
+    var nextI=-1;for(var i=0;i<6;i++){if(i!==1&&mins[i]>now.min){nextI=i;break}}
+    var box=document.getElementById("times");box.textContent="";
+    for(var j=0;j<6;j++){var row=document.createElement("div");row.className="row"+(j===1?" sun":"")+(j===nextI?" is-next":"");
+      var n=document.createElement("span");n.className="n";n.textContent=NAMES[j];
+      var t=document.createElement("span");t.className="t";t.textContent=fmt(mins[j]);row.appendChild(n);row.appendChild(t);box.appendChild(row)}
+    var nx=document.getElementById("next");
+    if(nextI>=0){var left=mins[nextI]-now.min,h=Math.floor(left/60),m=left%60;
+      nx.innerHTML="";nx.append("الصلاة القادمة ");var b=document.createElement("b");b.textContent=NAMES[nextI];nx.append(b);
+      nx.append(" بعد "+(h?h+" ساعة و":"")+m+" دقيقة")}
+    else{var tm=new Date(Date.now()+TZ*3600000+86400000),tmm=compute(tm.getUTCFullYear(),tm.getUTCMonth()+1,tm.getUTCDate());
+      nx.textContent="فجر باچر "+fmt(tmm[0])}
+  }
+  render();setInterval(render,30000);
+
+})();
+</script>
+</body>
+</html>
