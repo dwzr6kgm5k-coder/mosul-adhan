@@ -32,6 +32,6 @@
 
 ## إطلاق نسخة جديدة (التحديث التلقائي)
 1. زيد `versionCode` و `versionName` بـ `AndroidManifest.xml` و `app/build.gradle`.
-2. ابنِ الـ APK بنفس مفتاح التوقيع وحطه بـ `docs/MosulAdhan.apk`.
+2. ابنِ الـ APK بنفس مفتاح التوقيع وحطه بـ `docs/MosulAdhan-<الإصدار>.apk` (اسم جديد لكل نسخة حتى المتصفح ما ينزّل نسخة قديمة من الذاكرة)، وبدّل الرابط بـ `docs/index.html`.
 3. حدّث `docs/version.json` بنفس الرقم وارفع.
 التطبيقات المنصّبة (من 1.2 وطالع) تشيك على `version.json` كل يوم وتنزّل التحديث وحدها.
