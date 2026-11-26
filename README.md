@@ -28,4 +28,4 @@
 
 ## التحميل
 - الموقع: https://dwzr6kgm5k-coder.github.io/mosul-adhan/
-- آخر نسخة APK: https://github.com/dwzr6kgm5k-coder/mosul-adhan/releases/latest/download/MosulAdhan.apk
+- ملف التطبيق: https://dwzr6kgm5k-coder.github.io/mosul-adhan/MosulAdhan.apk (موجود بـ `docs/MosulAdhan.apk`، بدّله بأي نسخة جديدة)
